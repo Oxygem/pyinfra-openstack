@@ -1,2 +1,3 @@
 *.egg-info/
 ubuntu*.log
+example/.vagrant*/

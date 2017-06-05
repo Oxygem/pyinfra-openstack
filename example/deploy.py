@@ -15,10 +15,10 @@ install_base()
 
 
 # Install the controller servers
-state.limit_hosts = inventory.get_group('controllers')
-install_controller()
+with state.limit(inventory.get_group('controllers')):
+    install_controller()
 
 
 # Install the compute servers
-state.limit_hosts = inventory.get_group('computes')
-install_compute()
+with state.limit(inventory.get_group('computes')):
+    install_compute()

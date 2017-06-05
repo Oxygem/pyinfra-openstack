@@ -1,0 +1,11 @@
+[DEFAULT]
+log_dir = /var/log/keystone
+
+[database]
+connection = mysql+pymysql://keystone:{{ host.data.keystone_password }}@{{ host.data.controller_host }}/keystone
+
+[token]
+provider = fernet
+
+[extra_headers]
+Distribution = Ubuntu

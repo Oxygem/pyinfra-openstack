@@ -1,64 +1,82 @@
-from pyinfra.modules import apt, files, init, server
+from pyinfra.api.deploy import deploy
+from pyinfra.modules import apt
 
 from .controller import (
     install_compute_service,
     install_controller_services,
+    install_dashboard_service,
     install_identity_service,
     install_image_service,
 )
+from .node import (
+    install_compute_node,
+    install_node_services,
+)
 
 
-def install_base():
-    apt.update()
-    server.shell(
-        'apt-get dist-upgrade -y',
-    )
-
+@deploy('Install OpenStack base')
+def install_base(state, host):
     # Install base apt packages
     apt.packages(
+        state, host,
+        {'Install software-properties-common'},
         ['software-properties-common'],
+        update=True,
+        cache_time=3600,
     )
 
-    apt.ppa(
-        'cloud-archive:newton',
+    add_ppa = apt.ppa(
+        state, host,
+        {'Add the OpenStack PPA'},
+        'cloud-archive:ocata',
     )
 
-    apt.update()
-    apt.upgrade()
+    if add_ppa.changed:
+        apt.update(
+            state, host,
+            {'Update apt'},
+        )
+
+    apt.upgrade(
+        state, host,
+        {'Upgrade apt packages'},
+    )
 
     apt.packages(
-        [
-            'chrony',
-            'python-openstackclient',
-        ],
+        state, host,
+        {'Install python-openstackclient'},
+        ['python-openstackclient'],
+        latest=True,
     )
 
 
-def install_controller():
-    # Setup chrony, mysql, rabbitmq, memcached
+def install_controller(
+    identity=True,
+    image=True,
+    compute=True,
+    dashboard=True,
+):
     install_controller_services()
 
-    # Install the keystone indentity service
-    install_identity_service()
+    # Install the keystone identity service (required)
+    if identity:
+        install_identity_service()
 
     # Install the glance image service
-    install_image_service()
+    if image:
+        install_image_service()
 
-    # Install controller compute service
-    install_compute_service()
+    # Install the nova compute service
+    if compute:
+        install_compute_service()
+
+    # Install the horizon dashboard service
+    if dashboard:
+        install_dashboard_service()
 
 
 def install_compute():
-    files.put(
-        'files/chrony-compute.conf',
-        '/etc/chrony/chrony.conf',
-    )
+    install_node_services()
 
-    init.service(
-        'chrony',
-        restarted=True,
-    )
-
-    apt.packages(
-        ['nova-compute'],
-    )
+    # Install the nova compute node
+    install_compute_node()

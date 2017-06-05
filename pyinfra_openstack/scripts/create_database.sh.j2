@@ -1,0 +1,11 @@
+#!/bin/sh
+
+set -e
+
+echo "CREATE DATABASE {{ database }};" | mysql || true
+echo "GRANT ALL PRIVILEGES ON {{ database }}.* TO '{{ username }}'@'localhost' \
+    IDENTIFIED BY '{{ password }}';" | mysql
+echo "GRANT ALL PRIVILEGES ON {{ database }}.* TO '{{ username }}'@'%' \
+    IDENTIFIED BY '{{ password }}';" | mysql
+
+echo "FLUSH PRIVILEGES;" | mysql

@@ -27,10 +27,10 @@ def make_hosts(*name_ips):
 
 
 controllers = make_hosts(
-    ('controller', '192.168.40.40'),
+    ('controller', '10.40.40.40'),
 )
 
 computes = make_hosts(
-    ('compute-1', '192.168.41.40'),
-    ('compute-2', '192.168.42.40'),
+    ('compute-1', '10.40.40.41'),
+    ('compute-2', '10.40.40.42'),
 )

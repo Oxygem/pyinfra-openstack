@@ -13,14 +13,13 @@ Vagrant.configure('2') do |config|
         ubuntu.vm.box = 'ubuntu/xenial64'
         ubuntu.vm.hostname = 'controller'
 
-        # Public
-        ubuntu.vm.network :private_network, ip: '10.40.40.40'
         # Management
-        ubuntu.vm.network :private_network, ip: '192.168.40.40'
+        ubuntu.vm.network :private_network, ip: '10.40.40.40', netmask: '255.255.255.0'
 
-        # Give the box 4G memory
+        # Give the box 8G memory
         config.vm.provider 'virtualbox' do |v|
-            v.memory = 4096
+            v.memory = 8192
+            v.cpus = 4
         end
     end
 
@@ -28,24 +27,27 @@ Vagrant.configure('2') do |config|
         ubuntu.vm.box = 'ubuntu/xenial64'
         ubuntu.vm.hostname = 'compute-1'
 
-        # Public
-        ubuntu.vm.network :private_network, ip: '10.40.41.40'
         # Management
-        ubuntu.vm.network :private_network, ip: '192.168.41.40'
+        ubuntu.vm.network :private_network, ip: '10.40.40.41', netmask: '255.255.255.0'
 
-        # Give the box 1G memory
+        # Public
+        ubuntu.vm.network :public_network, ip: '192.168.40.1', netmask: '255.255.255.0'
+
+        # Give the box 2G memory
         config.vm.provider 'virtualbox' do |v|
-            v.memory = 1024
+            v.memory = 2048
         end
     end
 
     config.vm.define :compute_2 do |ubuntu|
         ubuntu.vm.box = 'ubuntu/xenial64'
+        ubuntu.vm.hostname = 'compute-2'
+
+        # Management
+        ubuntu.vm.network :private_network, ip: '10.40.40.42', netmask: '255.255.255.0'
 
         # Public
-        ubuntu.vm.network :private_network, ip: '10.40.42.40'
-        # Management
-        ubuntu.vm.network :private_network, ip: '192.168.42.40'
+        ubuntu.vm.network :public_network, ip: '192.168.50.1', netmask: '255.255.255.0'
 
         # Give the box 2G memory
         config.vm.provider 'virtualbox' do |v|

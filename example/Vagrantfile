@@ -2,10 +2,6 @@ Vagrant.configure('2') do |config|
     # Disable /vagrant synced folder
     config.vm.synced_folder '.', '/vagrant', disabled: true
 
-    # Inject hosts file
-    config.vm.provision 'file', source: 'files/hosts', destination: '~/hosts'
-    config.vm.provision 'shell', inline: 'sudo cp /home/ubuntu/hosts /etc/hosts'
-
     # Ensure we're running the latest Ubuntu 16
     config.vm.provision 'shell', inline: 'sudo apt-get update && sudo apt-get dist-upgrade -y'
 

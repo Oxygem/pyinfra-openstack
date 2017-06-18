@@ -14,5 +14,7 @@ metadata_secret = '01c61cc7aa38e2a96b8f3e9bb55a813fe78815b7'
 
 virt_type = 'qemu'
 
+bridge_interface = 'enp0s9'
+
 # The controllers group only contains one host
 controller_host = inventory.get_group('controllers')[0].data.ssh_hostname

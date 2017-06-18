@@ -1,5 +1,5 @@
 [linux_bridge]
-physical_interface_mappings = provider:enp0s3
+physical_interface_mappings = provider:{{ host.data.bridge_interface }}
 
 [vxlan]
 enable_vxlan = False

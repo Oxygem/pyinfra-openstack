@@ -32,8 +32,8 @@ auth_uri = http://{{ host.data.controller_host }}:5000
 auth_url = http://{{ host.data.controller_host }}:35357
 memcached_servers = {{ host.data.controller_host }}:11211
 auth_type = password
-project_domain_name = Default
-user_domain_name = Default
+project_domain_name = default
+user_domain_name = default
 project_name = service
 username = nova
 password = {{ host.data.nova_password }}
@@ -45,15 +45,31 @@ vncserver_proxyclient_address = $my_ip
 [glance]
 api_servers = http://{{ host.data.controller_host }}:9292
 
+[scheduler]
+discover_hosts_in_cells_interval = 30
+
 [oslo_concurrency]
 lock_path = /var/lib/nova/tmp
 
 [placement]
 os_region_name = RegionOne
-project_domain_name = Default
+project_domain_name = default
 project_name = service
 auth_type = password
-user_domain_name = Default
+user_domain_name = default
 auth_url = http://{{ host.data.controller_host }}:35357/v3
 username = placement
 password = {{ host.data.placement_password }}
+
+[neutron]
+url = http://{{ host.data.controller_host }}:9696
+auth_url = http://{{ host.data.controller_host }}:35357
+auth_type = password
+project_domain_name = default
+user_domain_name = default
+region_name = RegionOne
+project_name = service
+username = neutron
+password = {{ host.data.neutron_password }}
+service_metadata_proxy = true
+metadata_proxy_shared_secret = {{ host.data.metadata_secret }}

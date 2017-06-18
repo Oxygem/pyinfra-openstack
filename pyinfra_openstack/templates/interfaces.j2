@@ -1,0 +1,9 @@
+{% for interface in interfaces %}
+auto {{ interface.name }}
+iface {{ interface.name }} inet static
+  address {{ interface.address }}
+  netmask {{ interface.netmask }}
+  broadcast {{ interface.broadcast }}
+  gateway {{ interface.gateway }}
+  dns-nameservers {{ interface.dns }}
+{% endfor %}

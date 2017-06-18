@@ -1,0 +1,9 @@
+[linux_bridge]
+physical_interface_mappings = provider:enp0s3
+
+[vxlan]
+enable_vxlan = False
+
+[securitygroup]
+enable_security_group = True
+firewall_driver = neutron.agent.linux.iptables_firewall.IptablesFirewallDriver

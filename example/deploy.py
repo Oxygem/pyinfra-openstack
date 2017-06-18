@@ -8,7 +8,6 @@ from pyinfra_openstack import (
     install_network,
     install_openstack,
 )
-from pyinfra_openstack.util import make_admin_env
 
 SUDO = True
 FAIL_PERCENT = 0

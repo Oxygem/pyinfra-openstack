@@ -1,0 +1,25 @@
+[DEFAULT]
+auth_strategy = keystone
+transport_url = rabbit://openstack:{{ host.data.rabbitmq_password }}@{{ host.data.controller_host }}
+
+[keystone_authtoken]
+auth_uri = http://{{ host.data.controller_host }}:5000
+auth_url = http://{{ host.data.controller_host }}:35357
+memcached_servers = {{ host.data.controller_host }}:11211
+auth_type = password
+project_domain_name = default
+user_domain_name = default
+project_name = service
+username = ceilometer
+password = {{ host.data.ceilometer_password }}
+
+[service_credentials]
+auth_url = http://{{ host.data.controller_host }}:5000
+project_domain_id = default
+user_domain_id = default
+auth_type = password
+username = ceilometer
+project_name = service
+password = {{ host.data.ceilometer_password }}
+interface = internalURL
+region_name = RegionOne

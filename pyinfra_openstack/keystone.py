@@ -9,7 +9,7 @@ from .util import (
 
 
 @deploy('Install identity service')
-def install_identity_service(state, host):
+def install_keystone_service(state, host):
     create_database(state, host, 'keystone')
 
     keystone_install = apt.packages(

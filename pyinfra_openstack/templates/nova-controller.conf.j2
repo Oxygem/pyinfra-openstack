@@ -9,7 +9,9 @@ enabled_apis=osapi_compute,metadata
 transport_url = rabbit://openstack:{{ host.data.rabbitmq_password }}@{{ host.data.controller_host }}
 auth_strategy = keystone
 my_ip = {{ host.data.controller_host }}
+{% if neutron %}
 use_neutron = True
+{% endif %}
 firewall_driver = nova.virt.firewall.NoopFirewallDriver
 
 [database]
@@ -51,6 +53,7 @@ discover_hosts_in_cells_interval = 30
 [oslo_concurrency]
 lock_path = /var/lib/nova/tmp
 
+{% if placement %}
 [placement]
 os_region_name = RegionOne
 project_domain_name = default
@@ -60,7 +63,9 @@ user_domain_name = default
 auth_url = http://{{ host.data.controller_host }}:35357/v3
 username = placement
 password = {{ host.data.placement_password }}
+{% endif %}
 
+{% if neutron %}
 [neutron]
 url = http://{{ host.data.controller_host }}:9696
 auth_url = http://{{ host.data.controller_host }}:35357
@@ -73,3 +78,4 @@ username = neutron
 password = {{ host.data.neutron_password }}
 service_metadata_proxy = true
 metadata_proxy_shared_secret = {{ host.data.metadata_secret }}
+{% endif %}

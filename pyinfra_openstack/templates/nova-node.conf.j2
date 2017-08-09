@@ -9,12 +9,17 @@ enabled_apis=osapi_compute,metadata
 transport_url = rabbit://openstack:{{ host.data.rabbitmq_password }}@{{ host.data.controller_host }}
 auth_strategy = keystone
 my_ip = {{ host.data.ssh_hostname }}
-use_neutron = True
 firewall_driver = nova.virt.firewall.NoopFirewallDriver
-
 # Don't fail if interface doesn't work
 vif_plugging_timeout = 30
-
+{% if neutron %}
+use_neutron = True
+{% endif %}
+{% if ceilometer %}
+instance_usage_audit = True
+instance_usage_audit_period = hour
+notify_on_state_change = vm_and_task_state
+{% endif %}
 flat_inject = true
 injected_network_template = /etc/nova/interfaces.j2
 
@@ -44,9 +49,12 @@ novncproxy_base_url = http://{{ host.data.controller_host }}:6080/vnc_auto.html
 [glance]
 api_servers = http://{{ host.data.controller_host }}:9292
 
-[oslo_concurrency]
-lock_path = /var/lib/nova/tmp
+[oslo_messaging_notifications]
+{% if ceilometer %}
+driver = messagingv2
+{% endif %}
 
+{% if placement %}
 [placement]
 os_region_name = RegionOne
 project_domain_name = default
@@ -56,7 +64,9 @@ user_domain_name = default
 auth_url = http://{{ host.data.controller_host }}:35357/v3
 username = placement
 password = {{ host.data.placement_password }}
+{% endif %}
 
+{% if neutron %}
 [neutron]
 url = http://{{ host.data.controller_host }}:9696
 auth_url = http://{{ host.data.controller_host }}:35357
@@ -67,3 +77,4 @@ region_name = RegionOne
 project_name = service
 username = neutron
 password = {{ host.data.neutron_password }}
+{% endif %}

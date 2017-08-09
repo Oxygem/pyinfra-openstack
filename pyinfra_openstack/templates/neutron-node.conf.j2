@@ -19,6 +19,7 @@ project_name = service
 username = neutron
 password = {{ host.data.neutron_password }}
 
+{% if nova %}
 [nova]
 auth_url = http://{{ host.data.controller_host }}:35357
 auth_type = password
@@ -28,3 +29,4 @@ region_name = RegionOne
 project_name = service
 username = nova
 password = {{ host.data.nova_password }}
+{% endif %}

@@ -10,7 +10,7 @@ from .util import (
 
 
 @deploy('Install network service')
-def install_network_service(state, host):
+def install_neutron_service(state, host, nova=False, placement=False):
     create_database(state, host, 'neutron')
 
     neutron_install = apt.packages(
@@ -31,6 +31,7 @@ def install_network_service(state, host):
         {'Generate neutron config'},
         get_template_path('neutron-controller.conf.j2'),
         '/etc/neutron/neutron.conf',
+        nova=nova,
     )
 
     ml2_plugin_configure = files.template(
@@ -80,7 +81,7 @@ def _install_agent(state, host, agent_name, template_name, config_path):
 
 
 @deploy('Install network node config')
-def install_network_node(state, host):
+def install_neutron_node(state, host, nova=False):
     files.directory(
         {'Create neutron config directory'},
         '/etc/neutron',
@@ -91,6 +92,7 @@ def install_network_node(state, host):
         {'Generate neutron config'},
         get_template_path('neutron-node.conf.j2'),
         '/etc/neutron/neutron.conf',
+        nova=nova,
     )
 
 

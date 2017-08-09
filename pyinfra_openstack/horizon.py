@@ -7,7 +7,7 @@ from .util import (
 
 
 @deploy('Install dashboard service')
-def install_dashboard_service(state, host):
+def install_horizon_service(state, host):
     apt.packages(
         {'Install openstack-dashboard'},
         ['openstack-dashboard'],

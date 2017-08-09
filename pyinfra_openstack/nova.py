@@ -10,36 +10,43 @@ from .util import (
 
 
 @deploy('Install compute service')
-def install_compute_service(state, host):
+def install_nova_service(state, host, neutron=False, placement=False):
     create_database(state, host, 'nova')
     create_database(state, host, 'nova_api', name='nova')
     create_database(state, host, 'nova_cell0', name='nova')
 
+    packages = [
+        'nova-api',
+        'nova-conductor',
+        'nova-consoleauth',
+        'nova-novncproxy',
+        'nova-scheduler',
+    ]
+
+    if placement:
+        packages.append('nova-placement-api')
+
     nova_install = apt.packages(
         state, host,
         {'Install nova compute controller packages'},
-        [
-            'nova-api',
-            'nova-conductor',
-            'nova-consoleauth',
-            'nova-novncproxy',
-            'nova-scheduler',
-            'nova-placement-api',
-        ],
+        packages,
     )
 
     if nova_install.changed:
         create_service_user(state, host, 'nova', 'compute')
         create_service_endpoints(state, host, 'compute', ':8774/v2.1/%\(tenant_id\)s')
 
-        create_service_user(state, host, 'placement', 'placement')
-        create_service_endpoints(state, host, 'placement', ':8778')
+        if packages:
+            create_service_user(state, host, 'placement', 'placement')
+            create_service_endpoints(state, host, 'placement', ':8778')
 
     nova_configure = files.template(
         state, host,
         {'Generate nova config'},
         get_template_path('nova-controller.conf.j2'),
         '/etc/nova/nova.conf',
+        neutron=neutron,
+        placement=placement,
     )
 
     server.shell(
@@ -80,7 +87,7 @@ def install_compute_service(state, host):
 
 
 @deploy('Install compute node')
-def install_compute_node(state, host):
+def install_nova_node(state, host, neutron=False, placement=False, ceilometer=False):
     apt.packages(
         state, host,
         {'Install nova-compute'},
@@ -98,6 +105,9 @@ def install_compute_node(state, host):
         {'Generate nova config'},
         get_template_path('nova-node.conf.j2'),
         '/etc/nova/nova.conf',
+        neutron=neutron,
+        placement=placement,
+        ceilometer=ceilometer,
     )
 
     nova_compute_configure = files.template(

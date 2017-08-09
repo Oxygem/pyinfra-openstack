@@ -10,7 +10,7 @@ from .util import (
 
 
 @deploy('Install image service')
-def install_image_service(state, host):
+def install_glance_service(state, host):
     install_glance = apt.packages(
         state, host,
         {'Install glance'},

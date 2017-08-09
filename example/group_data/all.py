@@ -9,6 +9,8 @@ glance_password = '1c5d384d16e05f70e1d1d0645b95038674b3fa3b'
 nova_password = 'ce5ddb82e7679baaaaf9dc2d05e4f920e4cc73a4'
 placement_password = 'aff05a8f2415df8322a90847bb2ee8b0bb07c650'
 neutron_password = '1e15bb483a2b2acb8d52b58db3686e02b7d45676'
+ceilometer_password = '4c433f9fc72e7debbb008bfe8a2564c074e079d3'
+gnocchi_password = 'c7fe510a962c7f3f57f5019abc82fe0b4f24e96d'
 
 metadata_secret = '01c61cc7aa38e2a96b8f3e9bb55a813fe78815b7'
 
